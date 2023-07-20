@@ -91,7 +91,7 @@ namespace Menagerie.Repositories
                     cmd.CommandText = @"
                  SELECT Id, [Name], Email, FirebaseUserId                                             
                  FROM UserProfile u                     
-                 WHERE u.FirebaseUserId = @fireBaseId
+                 WHERE u.FirebaseId = @fireBaseId
                  ";
                     DbUtils.AddParameter(cmd, "@firebaseId", firebaseId);
 
@@ -106,7 +106,7 @@ namespace Menagerie.Repositories
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
                                 Email = DbUtils.GetString(reader, "Email"),
-                                FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId")
+                                FirebaseId = DbUtils.GetString(reader, "FirebaseUserId")
                             };
 
                         }
@@ -130,10 +130,11 @@ namespace Menagerie.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO UserProfile ([Name], Email, DateCreated, ImageUrl)
+                        INSERT INTO UserProfile ([Name], Email, FirebaseId)
                         OUTPUT INSERTED.ID
-                        VALUES (@name, @email, @dateCreated, @imageUrl)";
+                        VALUES (@name, @email, @firebaseId)";
 
+                    DbUtils.AddParameter(cmd, "@firebaseId", userProfile.FirebaseId);
                     DbUtils.AddParameter(cmd, "@name", userProfile.Name);
                     DbUtils.AddParameter(cmd, "@email", userProfile.Email);
 

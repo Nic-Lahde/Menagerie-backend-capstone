@@ -13,6 +13,6 @@ namespace Menagerie.Models
         public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-        public string FirebaseUserId { get; set; }
+        public string FirebaseId { get; set; }
     }
 }
