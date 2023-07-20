@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Menagerie.Repositories;
 using Menagerie.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Menagerie.Controllers
 {
@@ -79,6 +80,23 @@ namespace Menagerie.Controllers
         {
             _userProfileRepository.Delete(id);
             return NoContent();
+        }
+
+        [HttpGet("Me")]
+        public IActionResult Me()
+        {
+            var userProfile = GetCurrentUserProfile();
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(userProfile);
+        }
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseId(firebaseUserId);
         }
     }
 }

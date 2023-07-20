@@ -31,7 +31,7 @@ function App() {
     <div className="App">
       <Router>
         <Header isLoggedIn={isLoggedIn} userProfile={userProfile} />
-        <ApplicationViews isLoggedIn={isLoggedIn} />
+        <ApplicationViews isLoggedIn={isLoggedIn} userProfile={userProfile} />
       </Router>
     </div>
   );

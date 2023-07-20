@@ -89,7 +89,7 @@ namespace Menagerie.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                 SELECT Id, [Name], Email, FirebaseUserId                                             
+                 SELECT Id, [Name], Email, FirebaseId                                             
                  FROM UserProfile u                     
                  WHERE u.FirebaseId = @fireBaseId
                  ";
@@ -106,7 +106,7 @@ namespace Menagerie.Repositories
                                 Id = DbUtils.GetInt(reader, "Id"),
                                 Name = DbUtils.GetString(reader, "Name"),
                                 Email = DbUtils.GetString(reader, "Email"),
-                                FirebaseId = DbUtils.GetString(reader, "FirebaseUserId")
+                                FirebaseId = DbUtils.GetString(reader, "FirebaseId")
                             };
 
                         }
