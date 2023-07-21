@@ -15,6 +15,11 @@ const Header = () => {
                     </Link>
                 </li>
                 <li className="nav-item">
+                    <Link to="/addPet" className="nav-link">
+                        Add New Pet
+                    </Link>
+                </li>
+                <li className="nav-item">
                     <Link to="/login" className="nav-link" onClick={logout}>
                         LOGOUT
                     </Link>

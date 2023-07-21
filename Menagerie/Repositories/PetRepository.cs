@@ -142,25 +142,33 @@ namespace Menagerie.Repositories
 
 
 
-        //public void Add(Pet userProfile)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                INSERT INTO Pet ([Name], Email, DateCreated, ImageUrl)
-        //                OUTPUT INSERTED.ID
-        //                VALUES (@name, @email, @dateCreated, @imageUrl)";
+        public void Add(Pet pet)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Pet (UserProfileId, [Name], SpeciesCommon, SpeciesLatin, DOB, FoodInterval, ImageUrl, SexId, Notes, Archive)
+                        OUTPUT INSERTED.ID
+                        VALUES (@userProfileId, @name, @speciesCommon, @speciesLatin, @dOB, @foodInterval, @imageUrl, @sexId, @notes, 0)";
 
-        //            DbUtils.AddParameter(cmd, "@name", userProfile.Name);
-        //            DbUtils.AddParameter(cmd, "@email", userProfile.Email);
+                    DbUtils.AddParameter(cmd, "@userProfileId", pet.UserProfileId);
+                    DbUtils.AddParameter(cmd, "@name", pet.Name);
+                    DbUtils.AddParameter(cmd, "@speciesCommon", pet.SpeciesCommon);
+                    DbUtils.AddParameter(cmd, "@speciesLatin", pet.SpeciesLatin);
+                    DbUtils.AddParameter(cmd, "@dOB", pet.DOB);
+                    DbUtils.AddParameter(cmd, "@foodInterval", pet.FoodInterval);
+                    DbUtils.AddParameter(cmd, "@imageUrl", pet.ImageUrl);
+                    DbUtils.AddParameter(cmd, "@sexId", pet.SexId);
+                    DbUtils.AddParameter(cmd, "@notes", pet.Notes);
 
-        //            userProfile.Id = (int)cmd.ExecuteScalar();
-        //        }
-        //    }
-        //}
+
+                    pet.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
         //public void Update(Pet userProfile)
         //{
         //    using (var conn = Connection)

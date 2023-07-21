@@ -6,5 +6,6 @@ namespace Menagerie.Repositories
     public interface IPetRepository
     {
         List<Pet> GetAllByOwner(int id);
+        public void Add(Pet pet);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Menagerie.Repositories;
+﻿using Menagerie.Models;
+using Menagerie.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,13 @@ namespace Menagerie.Controllers
         {
             return Ok(_petRepository.GetAllByOwner(id));
         }
+        [HttpPost]
+        public IActionResult Create(Pet pet)
+        {
+            _petRepository.Add(pet);
+            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+        }
 
-      
+
     }
 }
