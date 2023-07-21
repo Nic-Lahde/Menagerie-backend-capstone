@@ -169,27 +169,41 @@ namespace Menagerie.Repositories
                 }
             }
         }
-        //public void Update(Pet userProfile)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                UPDATE Pet
-        //                   SET [Name] = @name,
-        //                       Email  = @email
-        //                 WHERE Id = @id";
+        public void Update(Pet pet)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                UPDATE Pet
+                SET
+                    [Name] = @name,
+                    SpeciesCommon = @speciesCommon,
+                    SpeciesLatin = @speciesLatin,
+                    DOB = @dOB,
+                    FoodInterval = @foodInterval,
+                    ImageUrl = @imageUrl,
+                    SexId = @sexId,
+                    Notes = @notes
+                WHERE
+                    Id = @id";
 
-        //            DbUtils.AddParameter(cmd, "@name", userProfile.Name);
-        //            DbUtils.AddParameter(cmd, "@email", userProfile.Email);
-        //            DbUtils.AddParameter(cmd, "@id", userProfile.Id);
+                    DbUtils.AddParameter(cmd, "@id", pet.Id);
+                    DbUtils.AddParameter(cmd, "@name", pet.Name);
+                    DbUtils.AddParameter(cmd, "@speciesCommon", pet.SpeciesCommon);
+                    DbUtils.AddParameter(cmd, "@speciesLatin", pet.SpeciesLatin);
+                    DbUtils.AddParameter(cmd, "@dOB", pet.DOB);
+                    DbUtils.AddParameter(cmd, "@foodInterval", pet.FoodInterval);
+                    DbUtils.AddParameter(cmd, "@imageUrl", pet.ImageUrl);
+                    DbUtils.AddParameter(cmd, "@sexId", pet.SexId);
+                    DbUtils.AddParameter(cmd, "@notes", pet.Notes);
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         //public void Archive(int id)
         //{

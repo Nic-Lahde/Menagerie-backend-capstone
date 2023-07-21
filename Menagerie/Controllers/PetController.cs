@@ -27,9 +27,14 @@ namespace Menagerie.Controllers
         public IActionResult Create(Pet pet)
         {
             _petRepository.Add(pet);
-            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+            return NoContent();
         }
-
+        [HttpPut]
+        public IActionResult Edit(Pet pet)
+        {
+            _petRepository.Update(pet);
+            return NoContent();
+        }
 
     }
 }
