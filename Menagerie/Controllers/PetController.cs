@@ -33,8 +33,13 @@ namespace Menagerie.Controllers
         public IActionResult Edit(Pet pet)
         {
             _petRepository.Update(pet);
-            return NoContent();
+            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
         }
-
+        [HttpPut("archive")]
+        public IActionResult Archive(Pet pet)
+        {
+            _petRepository.Archive(pet.Id);
+            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+        }
     }
 }

@@ -8,7 +8,7 @@ export const PetForm = ({ userProfile }) => {
         userProfileId: userProfile.id,
         speciesCommon: "",
         speciesLatin: "",
-        dOB: "",
+        dob: "",
         foodInterval: 0,
         imageUrl: "",
         sexId: 0,
@@ -59,12 +59,12 @@ export const PetForm = ({ userProfile }) => {
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Label for="dOB">Date of Birth (estimating is OK)</Label>
+                    <Label for="dob">Date of Birth (estimating is OK)</Label>
                     <Input
-                        id="dOB"
+                        id="dob"
                         type="text"
-                        value={newPet.dOB}
-                        onChange={(e) => setNewPet({ ...newPet, dOB: e.target.value })}
+                        value={newPet.dob}
+                        onChange={(e) => setNewPet({ ...newPet, dob: e.target.value })}
                     />
                 </FormGroup>
                 <FormGroup>

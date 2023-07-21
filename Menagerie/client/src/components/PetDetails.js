@@ -1,8 +1,8 @@
-import { Card, CardBody, CardTitle, Col, Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { Card, CardBody, CardTitle, Col, Button, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
-export const PetDetails = ({ pet, setSelectedPet }) => {
+export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
     const [editMode, setEditMode] = useState(false)
     const [petToEdit, setPetToEdit] = useState(pet)
     const navigate = useNavigate();
@@ -14,11 +14,31 @@ export const PetDetails = ({ pet, setSelectedPet }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(petToEdit)
-        }).then(() => {
+        }).then(res => res.json()).then((response) => {
+            setPets(response)
+            setSelectedPet(null)
             navigate("/")
-            window.location.reload();
         })
     }
+    const handleArchiveSubmit = (e) => {
+        e.preventDefault();
+        toggle();
+        fetch("/api/pet/archive", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(pet)
+        }).then(res => res.json()).then((response) => {
+            setPets(response)
+            setSelectedPet(null)
+            navigate("/")
+        })
+    }
+    const [modal, setModal] = useState(false);
+    const toggle = () => setModal(!modal);
+
+
 
     if (editMode) {
         return (
@@ -52,12 +72,12 @@ export const PetDetails = ({ pet, setSelectedPet }) => {
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="dOB">Date of Birth (estimating is OK)</Label>
+                        <Label for="dob">Date of Birth (estimating is OK)</Label>
                         <Input
-                            id="dOB"
+                            id="dob"
                             type="text"
-                            value={petToEdit.dOB}
-                            onChange={(e) => setPetToEdit({ ...petToEdit, dOB: e.target.value })}
+                            value={petToEdit.dob}
+                            onChange={(e) => setPetToEdit({ ...petToEdit, dob: e.target.value })}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -147,7 +167,7 @@ export const PetDetails = ({ pet, setSelectedPet }) => {
                     <p>{pet.speciesCommon}</p>
                     <p>{pet.speciesLatin}</p>
                     <p>{pet.sex}</p>
-                    <p>{pet.dOB}</p>
+                    <p>Date of birth: {pet.dob}</p>
                     <p>Feed every {pet.foodInterval} days</p>
                     <h6>Notes:</h6>
                     {pet.notes ? (<p>{pet.notes}</p>
@@ -176,8 +196,28 @@ export const PetDetails = ({ pet, setSelectedPet }) => {
                     )}
                 </CardBody>
             </Card>
+            <Modal
+                isOpen={modal}
+                toggle={toggle}
+            >
+                <ModalHeader toggle={toggle}>Send {pet.name} to the archive?</ModalHeader>
+                <ModalBody>
+                    Your pet will be marked as inactive and no longer appear alongside your other pets. This action is irreversible.
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={handleArchiveSubmit}>
+                        Send to the archive
+                    </Button>{' '}
+                    <Button color="secondary" onClick={toggle}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
             <button onClick={() => setEditMode(true)} >Edit</button>
             <button onClick={() => setSelectedPet(null)} >View All</button>
+            <Button color="danger" onClick={toggle}>
+                Add this pet to the archive
+            </Button>
         </Col>
     )
 }

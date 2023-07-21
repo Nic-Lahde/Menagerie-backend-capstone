@@ -205,18 +205,25 @@ namespace Menagerie.Repositories
             }
         }
 
-        //public void Archive(int id)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = "DELETE FROM Pet WHERE Id = @Id";
-        //            DbUtils.AddParameter(cmd, "@id", id);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+        public void Archive(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                UPDATE Pet
+                SET
+                    [Archive] = 1
+                WHERE
+                    Id = @id";
+
+                    DbUtils.AddParameter(cmd, "@id", id);          
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

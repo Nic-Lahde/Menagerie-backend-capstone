@@ -8,5 +8,6 @@ namespace Menagerie.Repositories
         List<Pet> GetAllByOwner(int id);
         public void Add(Pet pet);
         public void Update(Pet pet);
+        public void Archive(int id);
     }
 }
