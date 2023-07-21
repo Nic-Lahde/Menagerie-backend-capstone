@@ -9,5 +9,6 @@ namespace Menagerie.Repositories
         public void Add(Pet pet);
         public void Update(Pet pet);
         public void Archive(int id);
+        public void AddGeneToPet(int petId, int geneId);
     }
 }

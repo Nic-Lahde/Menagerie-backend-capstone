@@ -41,5 +41,11 @@ namespace Menagerie.Controllers
             _petRepository.Archive(pet.Id);
             return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
         }
+        [HttpPost("AddGene/{id}")]
+        public IActionResult AddGeneToPet(int id, Pet pet)
+        {
+            _petRepository.AddGeneToPet(pet.Id, id);
+           return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+        }
     }
 }

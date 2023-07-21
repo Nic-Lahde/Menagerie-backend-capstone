@@ -100,48 +100,6 @@ namespace Menagerie.Repositories
         }
 
 
-
-        //public Pet GetById(int id)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //         SELECT Id, [Name], Email                                           
-        //         FROM Pet u                     
-        //         WHERE u.Id = @id
-        //         ";
-        //            DbUtils.AddParameter(cmd, "@id", id);
-
-        //            using (SqlDataReader reader = cmd.ExecuteReader())
-        //            {
-
-        //                Pet userProfile = null;
-        //                if (reader.Read())
-        //                {
-        //                    userProfile = new Pet()
-        //                    {
-        //                        Id = DbUtils.GetInt(reader, "Id"),
-        //                        Name = DbUtils.GetString(reader, "Name"),
-        //                        Email = DbUtils.GetString(reader, "Email"),
-        //                    };
-
-        //                }
-
-        //                return userProfile;
-        //            }
-        //        }
-        //    }
-        //}
-
-
-
-
-
-
-
         public void Add(Pet pet)
         {
             using (var conn = Connection)
@@ -220,6 +178,48 @@ namespace Menagerie.Repositories
                     Id = @id";
 
                     DbUtils.AddParameter(cmd, "@id", id);          
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AddGeneToPet(int petId, int geneId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO PetGene (PetId, GeneId)
+                        VALUES (@petId, @geneId)";
+
+                    DbUtils.AddParameter(cmd, "@petId", petId);
+                    DbUtils.AddParameter(cmd, "@geneId", geneId);
+
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void AddTraitToPet(int petId, Trait trait)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO PetTrait (PetId, TraitId, [Percentage])
+                        VALUES (@petId, @traitId, @percentage)";
+
+                    DbUtils.AddParameter(cmd, "@petId", petId);
+                    DbUtils.AddParameter(cmd, "@traitId", trait.Id);
+                    DbUtils.AddParameter(cmd, "@percentage", trait.Percentage);
+
+
 
                     cmd.ExecuteNonQuery();
                 }

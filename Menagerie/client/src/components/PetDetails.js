@@ -1,11 +1,30 @@
 import { Card, CardBody, CardTitle, Col, Button, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 
 export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
+
     const [editMode, setEditMode] = useState(false)
+
     const [petToEdit, setPetToEdit] = useState(pet)
+
+    const [genes, setGenes] = useState([])
+    const [selectedGeneId, setSelectedGeneId] = useState("");
+
+    useEffect(() => {
+        fetch('/api/Gene/').then(res => (res.json())).then(res => setGenes(res))
+    }, [])
+
     const navigate = useNavigate();
+
+    const [archiveModal, setArchiveModal] = useState(false);
+
+    const [geneModal, setGeneModal] = useState(false);
+
+    const archiveToggle = () => setArchiveModal(!archiveModal);
+
+    const geneToggle = () => setGeneModal(!geneModal);
+
     const handleEditSubmit = (e) => {
         e.preventDefault();
         fetch("/api/pet", {
@@ -20,9 +39,23 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
             navigate("/")
         })
     }
+    const handleGeneSubmit = (id) => {
+        fetch("/api/pet/AddGene/" + id, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(pet)
+        }).then(res => res.json()).then((response) => {
+            setPets(response)
+            setSelectedPet(null)
+            navigate("/")
+        })
+    }
+
     const handleArchiveSubmit = (e) => {
         e.preventDefault();
-        toggle();
+        archiveToggle();
         fetch("/api/pet/archive", {
             method: "PUT",
             headers: {
@@ -35,8 +68,6 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
             navigate("/")
         })
     }
-    const [modal, setModal] = useState(false);
-    const toggle = () => setModal(!modal);
 
 
 
@@ -154,6 +185,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
             </Form>
         );
     }
+
     return (
         <Col md="12">
             <Card style={{
@@ -184,6 +216,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                     ) : (
                         <p>None</p>
                     )}
+                    <Button onClick={geneToggle}>Add a gene</Button>
                     <h6>Traits:</h6>
                     {pet.traits.length > 0 ? (
                         <div>
@@ -197,10 +230,10 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                 </CardBody>
             </Card>
             <Modal
-                isOpen={modal}
-                toggle={toggle}
+                isOpen={archiveModal}
+                toggle={archiveToggle}
             >
-                <ModalHeader toggle={toggle}>Send {pet.name} to the archive?</ModalHeader>
+                <ModalHeader toggle={archiveToggle}>Send {pet.name} to the archive?</ModalHeader>
                 <ModalBody>
                     Your pet will be marked as inactive and no longer appear alongside your other pets. This action is irreversible.
                 </ModalBody>
@@ -208,14 +241,49 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                     <Button color="primary" onClick={handleArchiveSubmit}>
                         Send to the archive
                     </Button>{' '}
-                    <Button color="secondary" onClick={toggle}>
+                    <Button color="secondary" onClick={archiveToggle}>
                         Cancel
                     </Button>
                 </ModalFooter>
             </Modal>
-            <button onClick={() => setEditMode(true)} >Edit</button>
-            <button onClick={() => setSelectedPet(null)} >View All</button>
-            <Button color="danger" onClick={toggle}>
+            <Modal
+                isOpen={geneModal}
+                toggle={geneToggle}
+            >
+                <ModalHeader toggle={geneToggle}>Add a gene to {pet.name}?</ModalHeader>
+                <ModalBody>
+                    <Form>
+                        <FormGroup>
+                            <Label for="geneSelect">Select a gene:</Label>
+                            <Input
+                                type="select"
+                                name="geneSelect"
+                                id="geneSelect"
+                                value={selectedGeneId}
+                                onChange={(e) => setSelectedGeneId(e.target.value)}
+                            >
+                                <option value="">Select a gene</option>
+                                {genes.map((gene) => (
+                                    <option key={gene.id} value={gene.id}>
+                                        {gene.name}
+                                    </option>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                    </Form>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={() => handleGeneSubmit(selectedGeneId)}>
+                        Add this gene
+                    </Button>{' '}
+                    <Button color="secondary" onClick={geneToggle}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+            <Button onClick={() => setEditMode(true)} >Edit</Button>
+            <Button onClick={() => setSelectedPet(null)} >View All</Button>
+            <Button color="danger" onClick={archiveToggle}>
                 Add this pet to the archive
             </Button>
         </Col>
