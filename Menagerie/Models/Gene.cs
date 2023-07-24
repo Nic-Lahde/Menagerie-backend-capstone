@@ -8,6 +8,7 @@ namespace Menagerie.Models
     public class Gene
     {
         public int Id { get; set; }
+        public int PetGeneId { get; set; }
         public bool IsCoDominant { get; set; }
         public string Name { get; set; }
     }

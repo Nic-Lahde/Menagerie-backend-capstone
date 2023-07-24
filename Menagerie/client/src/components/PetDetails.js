@@ -2,7 +2,7 @@ import { Card, CardBody, CardTitle, Col, Button, Form, FormGroup, Label, Input, 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 
-export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
+export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
 
     const [editMode, setEditMode] = useState(false)
 
@@ -53,6 +53,17 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
         })
     }
 
+    const handleRemoveGene = (petGeneId) => {
+        fetch(`/api/pet/removeGene/${petGeneId}/${userProfile.id}`, {
+            method: "DELETE"
+        }).then(res => res.json())
+            .then(response => {
+                setPets(response)
+                setSelectedPet(null)
+                navigate("/");
+            })
+    }
+
     const handleArchiveSubmit = (e) => {
         e.preventDefault();
         archiveToggle();
@@ -69,7 +80,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
         })
     }
 
-
+    console.log(pet)
 
     if (editMode) {
         return (
@@ -201,6 +212,16 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                     <p>{pet.sex}</p>
                     <p>Date of birth: {pet.dob}</p>
                     <p>Feed every {pet.foodInterval} days</p>
+                    <h6>Past feedings:</h6>
+                    {pet.feedings.length > 0 ? (
+                        <div>
+                            {pet.feedings.map((feeding) => (
+                                <p key={`feeding-${feeding.id}`}>{feeding.food} on {feeding.date}</p>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>None</p>
+                    )}
                     <h6>Notes:</h6>
                     {pet.notes ? (<p>{pet.notes}</p>
                     ) : (
@@ -210,7 +231,8 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                     {pet.genes.length > 0 ? (
                         <div>
                             {pet.genes.map((gene) => (
-                                <p key={gene.id}>{gene.name}</p>
+                                <p key={`gene-${gene.petGeneId}`}>{gene.name}  <Button onClick={() => handleRemoveGene(gene.petGeneId)}>Remove this gene</Button></p>
+                                //console.log(gene)
                             ))}
                         </div>
                     ) : (
@@ -221,7 +243,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets }) => {
                     {pet.traits.length > 0 ? (
                         <div>
                             {pet.traits.map((trait) => (
-                                <p key={trait.id}>{trait.name}</p>
+                                <p key={`trait-${trait.id}`}>{trait.name}</p>
                             ))}
                         </div>
                     ) : (

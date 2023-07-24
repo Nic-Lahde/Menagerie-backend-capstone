@@ -17,7 +17,7 @@ export const MyPets = ({ userProfile }) => {
             {userProfile ? (
                 <>
                     {selectedPet ? (
-                        <PetDetails pet={selectedPet} setSelectedPet={setSelectedPet} setPets={setPets} />
+                        <PetDetails pet={selectedPet} setSelectedPet={setSelectedPet} setPets={setPets} userProfile={userProfile} />
                     ) : (
                         <>
                             <h1>{userProfile.name}'s Pets</h1>

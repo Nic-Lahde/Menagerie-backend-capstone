@@ -68,8 +68,9 @@ namespace Menagerie.Repositories
                                 existingPet.Feedings.Add(new Feeding()
                                 {
                                     Id = DbUtils.GetInt(reader, "FeedingId"),
-                                    DateTime = DbUtils.GetDateTime(reader, "FeedingDate"),
-                                    Food = DbUtils.GetString(reader, "Food")
+                                    Date = DbUtils.GetDateTime(reader, "FeedingDate"),
+                                    Food = DbUtils.GetString(reader, "Food"),
+                                    PetId = DbUtils.GetInt(reader, "PetId")
                                 });
                             }
                             if (DbUtils.IsNotDbNull(reader, "PetGeneId"))
@@ -77,6 +78,7 @@ namespace Menagerie.Repositories
                                 existingPet.Genes.Add(new Gene()
                                 {
                                     Id = DbUtils.GetInt(reader, "GeneId"),
+                                    PetGeneId = DbUtils.GetInt(reader, "PetGeneId"),
                                     IsCoDominant = reader.GetBoolean(reader.GetOrdinal("IsCoDominant")),
                                     Name = DbUtils.GetString(reader, "GeneName")
                                 });
@@ -86,6 +88,7 @@ namespace Menagerie.Repositories
                                 existingPet.Traits.Add(new Trait()
                                 {
                                     Id = DbUtils.GetInt(reader, "TraitId"),
+                                    PetTraitId = DbUtils.GetInt(reader, "PetTraitId"),
                                     Percentage = DbUtils.GetInt(reader, "Percentage"),
                                     Name = DbUtils.GetString(reader, "TraitName")
                                 });
@@ -98,7 +101,94 @@ namespace Menagerie.Repositories
                 }
             }
         }
+        public Pet GetPetById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                SELECT p.Id AS PetId, p.UserProfileId AS PetUserProfileId, p.[Name] AS PetName, SpeciesCommon, SpeciesLatin, DOB, FoodInterval, ImageUrl, SexId, Notes, s.Description AS Sex, g.Id AS GeneId, g.Name AS GeneName,
+                    IsCoDominant, Percentage, t.Id AS TraitId, t.Name AS TraitName, Food, f.Date AS FeedingDate, pg.Id AS PetGeneId, pt.Id AS PetTraitId, f.Id AS FeedingId
+                FROM Pet p 
+                JOIN Sex s ON SexId = s.Id
+                LEFT JOIN PetGene pg ON p.Id = pg.PetId
+                LEFT JOIN Gene g ON pg.GeneId = g.Id
+                LEFT JOIN PetTrait pt ON pt.PetId = p.Id
+                LEFT JOIN Trait t ON pt.TraitId = t.Id
+                LEFT JOIN Feeding f ON f.PetId = p.Id
+                WHERE p.Id = @id AND p.Archive = 0
+                ";
 
+                    DbUtils.AddParameter(cmd, "@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Pet pet = null;
+
+                        while (reader.Read())
+                        {
+                            if (pet == null)
+                            {
+                                pet = new Pet()
+                                {
+                                    Id = DbUtils.GetInt(reader, "PetId"),
+                                    UserProfileId = DbUtils.GetInt(reader, "PetUserProfileId"),
+                                    Name = DbUtils.GetString(reader, "PetName"),
+                                    SpeciesCommon = DbUtils.GetString(reader, "SpeciesCommon"),
+                                    SpeciesLatin = DbUtils.GetNullableString(reader, "SpeciesLatin"),
+                                    DOB = DbUtils.GetNullableString(reader, "DOB"),
+                                    FoodInterval = DbUtils.GetInt(reader, "FoodInterval"),
+                                    ImageUrl = DbUtils.GetNullableString(reader, "ImageUrl"),
+                                    SexId = DbUtils.GetInt(reader, "SexId"),
+                                    Sex = DbUtils.GetString(reader, "Sex"),
+                                    Notes = DbUtils.GetString(reader, "Notes"),
+                                    Feedings = new List<Feeding>(),
+                                    Traits = new List<Trait>(),
+                                    Genes = new List<Gene>()
+                                };
+                            }
+
+                            if (DbUtils.IsNotDbNull(reader, "FeedingId"))
+                            {
+                                pet.Feedings.Add(new Feeding()
+                                {
+                                    Id = DbUtils.GetInt(reader, "FeedingId"),
+                                    Date = DbUtils.GetDateTime(reader, "FeedingDate"),
+                                    Food = DbUtils.GetString(reader, "Food"),
+                                    PetId = DbUtils.GetInt(reader, "PetId")
+                                });
+                            }
+
+                            if (DbUtils.IsNotDbNull(reader, "PetGeneId"))
+                            {
+                                pet.Genes.Add(new Gene()
+                                {
+                                    Id = DbUtils.GetInt(reader, "GeneId"),
+                                    PetGeneId = DbUtils.GetInt(reader, "PetGeneId"),
+                                    IsCoDominant = reader.GetBoolean(reader.GetOrdinal("IsCoDominant")),
+                                    Name = DbUtils.GetString(reader, "GeneName")
+                                });
+                            }
+
+                            if (DbUtils.IsNotDbNull(reader, "PetTraitId"))
+                            {
+                                pet.Traits.Add(new Trait()
+                                {
+                                    Id = DbUtils.GetInt(reader, "TraitId"),
+                                    PetTraitId = DbUtils.GetInt(reader, "PetTraitId"),
+                                    Percentage = DbUtils.GetInt(reader, "Percentage"),
+                                    Name = DbUtils.GetString(reader, "TraitName")
+                                });
+                            }
+                        }
+
+                        return pet;
+                    }
+                }
+            }
+        }
 
         public void Add(Pet pet)
         {
@@ -221,6 +311,32 @@ namespace Menagerie.Repositories
 
 
 
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteGeneFromPet(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM PetGene WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteTraitFromPet(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM PetTrait WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
                 }
             }
