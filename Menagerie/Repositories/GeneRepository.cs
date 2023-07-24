@@ -38,5 +38,37 @@ namespace Menagerie.Repositories
                 }
             }
         }
+        public void Add(Gene gene)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Gene ([Name], IsCoDominant)
+                        OUTPUT INSERTED.ID
+                        VALUES (@name, @isCoDominant)";
+                  
+                    DbUtils.AddParameter(cmd, "@name", gene.Name);
+                    DbUtils.AddParameter(cmd, "@isCoDominant", gene.IsCoDominant);
+
+                    gene.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+        public void Delete(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Gene WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

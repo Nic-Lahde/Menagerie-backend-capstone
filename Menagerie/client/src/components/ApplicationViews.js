@@ -5,6 +5,7 @@ import Register from "./Register";
 import { MyPets } from "./MyPets";
 import { PetDetails } from "./PetDetails"
 import { PetForm } from "./PetForm"
+import { Genetics } from "./Genetics"
 
 const ApplicationViews = ({ isLoggedIn, userProfile }) => {
     return (
@@ -15,7 +16,7 @@ const ApplicationViews = ({ isLoggedIn, userProfile }) => {
                 <Route index element={isLoggedIn ? <MyPets userProfile={userProfile} /> : <Navigate to="/login" />} />
                 <Route path="index/:id" element={isLoggedIn ? <PetDetails userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
                 <Route path="addPet" element={isLoggedIn ? <PetForm userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
-
+                <Route path="genetics" element={isLoggedIn ? <Genetics userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
             </Route>
             <Route path="*" element={<p>Whoops, nothing here...</p>} />
         </Routes>

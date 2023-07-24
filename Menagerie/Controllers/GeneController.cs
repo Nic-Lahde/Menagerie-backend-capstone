@@ -22,5 +22,17 @@ namespace Menagerie.Controllers
         {
             return Ok(_geneRepository.GetAll());
         }
+        [HttpPost]
+        public IActionResult Create(Gene gene)
+        {
+            _geneRepository.Add(gene);
+            return Ok(_geneRepository.GetAll());
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _geneRepository.Delete(id);
+            return Ok(_geneRepository.GetAll());
+        }
     }
 }

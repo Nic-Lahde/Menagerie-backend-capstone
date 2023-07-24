@@ -6,5 +6,7 @@ namespace Menagerie.Repositories
     public interface IGeneRepository
     {
         List<Gene> GetAll();
+        void Add(Gene gene);
+        void Delete(int id);
     }
 }

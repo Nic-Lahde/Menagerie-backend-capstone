@@ -20,6 +20,11 @@ const Header = () => {
                     </Link>
                 </li>
                 <li className="nav-item">
+                    <Link to="/genetics" className="nav-link">
+                        Genetics
+                    </Link>
+                </li>
+                <li className="nav-item">
                     <Link to="/login" className="nav-link" onClick={logout}>
                         LOGOUT
                     </Link>
