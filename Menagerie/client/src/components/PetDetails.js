@@ -97,7 +97,16 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             navigate("/")
         })
     }
-
+    const handleRemoveTrait = (petTraitId) => {
+        fetch(`/api/pet/removeTrait/${petTraitId}/${userProfile.id}`, {
+            method: "DELETE"
+        }).then(res => res.json())
+            .then(response => {
+                setPets(response)
+                setSelectedPet(null)
+                navigate("/");
+            })
+    }
 
 
 
@@ -262,7 +271,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                     {pet.traits.length > 0 ? (
                         <div>
                             {pet.traits.map((trait) => (
-                                <p key={`trait-${trait.id}`}>{trait.name} {trait.percentage}%</p>
+                                <p key={`trait-${trait.id}`}>{trait.name} {trait.percentage}%<Button onClick={() => handleRemoveTrait(trait.petTraitId)}>Remove this trait</Button></p>
                             ))}
                         </div>
                     ) : (
