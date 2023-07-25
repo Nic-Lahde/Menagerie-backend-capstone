@@ -127,7 +127,16 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             navigate("/")
         })
     }
-
+    const handleRemoveFeeding = (feedingId) => {
+        fetch(`/api/feeding/${feedingId}/${userProfile.id}`, {
+            method: "DELETE"
+        }).then(res => res.json())
+            .then(response => {
+                setPets(response)
+                setSelectedPet(null)
+                navigate("/");
+            })
+    }
 
     if (editMode) {
         return (
@@ -263,7 +272,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                     {pet.feedings.length > 0 ? (
                         <div>
                             {pet.feedings.map((feeding) => (
-                                <p key={`feeding-${feeding.id}`}>{feeding.food} on {feeding.date}</p>
+                                <p key={`feeding-${feeding.id}`}>{feeding.food} on {feeding.date} <Button onClick={() => handleRemoveFeeding(feeding.id)}>Remove this feeding</Button></p>
                             ))}
                         </div>
                     ) : (
