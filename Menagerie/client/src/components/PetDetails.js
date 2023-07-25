@@ -22,7 +22,6 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
         })
     }
 
-
     const [archiveModal, setArchiveModal] = useState(false);
     const archiveToggle = () => setArchiveModal(!archiveModal);
     const handleArchiveSubmit = (e) => {
@@ -108,7 +107,26 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
     }
 
-
+    const [feedingModal, setFeedingModal] = useState(false);
+    const feedingToggle = () => setFeedingModal(!feedingModal);
+    const [newFeeding, setNewFeeding] = useState({
+        petId: pet.id,
+        food: "",
+        date: null
+    });
+    const handleFeedingSubmit = () => {
+        fetch(`/api/feeding/${userProfile.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newFeeding)
+        }).then(res => res.json()).then((response) => {
+            setPets(response)
+            setSelectedPet(null)
+            navigate("/")
+        })
+    }
 
 
     if (editMode) {
@@ -251,6 +269,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                     ) : (
                         <p>None</p>
                     )}
+                    <Button onClick={feedingToggle}>Add a feeding</Button>
                     <h6>Notes:</h6>
                     {pet.notes ? (<p>{pet.notes}</p>
                     ) : (
@@ -383,6 +402,43 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         Add this trait
                     </Button>{' '}
                     <Button color="secondary" onClick={traitToggle}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={feedingModal} toggle={feedingToggle}>
+                <ModalHeader toggle={feedingToggle}>When and what did you feed {pet.name}?</ModalHeader>
+                <ModalBody>
+                    <Form>
+                        <FormGroup>
+                            <Label for="foodInput">Food</Label>
+                            <Input
+                                type="text"
+                                id="foodInput"
+                                value={newFeeding.food}
+                                onChange={(e) =>
+                                    setNewFeeding({ ...newFeeding, food: e.target.value })
+                                }
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="dateInput">Date</Label>
+                            <Input
+                                type="date"
+                                id="dateInput"
+                                value={newFeeding.date}
+                                onChange={(e) =>
+                                    setNewFeeding({ ...newFeeding, date: e.target.value })
+                                }
+                            />
+                        </FormGroup>
+                    </Form>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={() => handleFeedingSubmit()}>
+                        Save Feeding
+                    </Button>{" "}
+                    <Button color="secondary" onClick={feedingToggle}>
                         Cancel
                     </Button>
                 </ModalFooter>
