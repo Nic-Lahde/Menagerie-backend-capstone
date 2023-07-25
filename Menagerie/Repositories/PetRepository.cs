@@ -65,36 +65,43 @@ namespace Menagerie.Repositories
                             }
                             if(DbUtils.IsNotDbNull(reader, "FeedingId"))
                             {
-                                existingPet.Feedings.Add(new Feeding()
-                                {
-                                    Id = DbUtils.GetInt(reader, "FeedingId"),
-                                    Date = DbUtils.GetDateTime(reader, "FeedingDate"),
-                                    Food = DbUtils.GetString(reader, "Food"),
-                                    PetId = DbUtils.GetInt(reader, "PetId")
-                                });
+                                var feedingId = DbUtils.GetInt(reader, "FeedingId");
+                                if (!existingPet.Feedings.Any(feeding => feeding.Id == feedingId)) { 
+                                    existingPet.Feedings.Add(new Feeding()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "FeedingId"),
+                                        Date = DbUtils.GetDateTime(reader, "FeedingDate"),
+                                        Food = DbUtils.GetString(reader, "Food"),
+                                        PetId = DbUtils.GetInt(reader, "PetId")
+                                    });                                
+                                }
                             }
                             if (DbUtils.IsNotDbNull(reader, "PetGeneId"))
                             {
-                                existingPet.Genes.Add(new Gene()
-                                {
-                                    Id = DbUtils.GetInt(reader, "GeneId"),
-                                    PetGeneId = DbUtils.GetInt(reader, "PetGeneId"),
-                                    IsCoDominant = reader.GetBoolean(reader.GetOrdinal("IsCoDominant")),
-                                    Name = DbUtils.GetString(reader, "GeneName")
-                                });
+                                var petGeneId = DbUtils.GetInt(reader, "PetGeneId");
+                                if (!existingPet.Genes.Any(gene => gene.PetGeneId == petGeneId)) { 
+                                    existingPet.Genes.Add(new Gene()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "GeneId"),
+                                        PetGeneId = DbUtils.GetInt(reader, "PetGeneId"),
+                                        IsCoDominant = reader.GetBoolean(reader.GetOrdinal("IsCoDominant")),
+                                        Name = DbUtils.GetString(reader, "GeneName")
+                                    });
+                                }
                             }
                             if (DbUtils.IsNotDbNull(reader, "PetTraitId"))
                             {
-                                existingPet.Traits.Add(new Trait()
-                                {
-                                    Id = DbUtils.GetInt(reader, "TraitId"),
-                                    PetTraitId = DbUtils.GetInt(reader, "PetTraitId"),
-                                    Percentage = DbUtils.GetInt(reader, "Percentage"),
-                                    Name = DbUtils.GetString(reader, "TraitName")
-                                });
+                                var petTraitId = DbUtils.GetInt(reader, "PetTraitId");
+                                if (!existingPet.Traits.Any(trait => trait.PetTraitId == petTraitId)) { 
+                                    existingPet.Traits.Add(new Trait()
+                                    {
+                                        Id = DbUtils.GetInt(reader, "TraitId"),
+                                        PetTraitId = DbUtils.GetInt(reader, "PetTraitId"),
+                                        Percentage = reader.GetDecimal(reader.GetOrdinal("Percentage")),
+                                        Name = DbUtils.GetString(reader, "TraitName")
+                                    });                              
+                                }
                             }
-
-
                         }
                         return pets;                                                                             
                     }
@@ -178,7 +185,7 @@ namespace Menagerie.Repositories
                                 {
                                     Id = DbUtils.GetInt(reader, "TraitId"),
                                     PetTraitId = DbUtils.GetInt(reader, "PetTraitId"),
-                                    Percentage = DbUtils.GetInt(reader, "Percentage"),
+                                    Percentage = reader.GetDecimal(reader.GetOrdinal("Percentage")),
                                     Name = DbUtils.GetString(reader, "TraitName")
                                 });
                             }
@@ -294,7 +301,7 @@ namespace Menagerie.Repositories
                 }
             }
         }
-        public void AddTraitToPet(int petId, Trait trait)
+        public void AddTraitToPet(int petId, decimal percentage, int traitId)
         {
             using (var conn = Connection)
             {
@@ -306,8 +313,8 @@ namespace Menagerie.Repositories
                         VALUES (@petId, @traitId, @percentage)";
 
                     DbUtils.AddParameter(cmd, "@petId", petId);
-                    DbUtils.AddParameter(cmd, "@traitId", trait.Id);
-                    DbUtils.AddParameter(cmd, "@percentage", trait.Percentage);
+                    DbUtils.AddParameter(cmd, "@traitId", traitId);
+                    DbUtils.AddParameter(cmd, "@percentage", percentage);
 
 
 

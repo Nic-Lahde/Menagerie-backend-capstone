@@ -47,6 +47,12 @@ namespace Menagerie.Controllers
             _petRepository.AddGeneToPet(pet.Id, id);
            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
         }
+        [HttpPost("AddTrait/{id}/{percentage}")]
+        public IActionResult AddTraitToPet(int id, int percentage, Pet pet)
+        {
+            _petRepository.AddTraitToPet(pet.Id, percentage, id);
+            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+        }
         [HttpDelete("RemoveGene/{petGeneId}/{userId}")]
         public IActionResult DeleteGeneFromPet(int petGeneId, int userId)
         {

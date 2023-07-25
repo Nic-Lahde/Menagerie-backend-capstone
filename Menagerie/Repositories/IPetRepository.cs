@@ -11,7 +11,7 @@ namespace Menagerie.Repositories
         void Update(Pet pet);
         void Archive(int id);
         void AddGeneToPet(int petId, int geneId);
-        void AddTraitToPet(int petId, Trait trait);
+        void AddTraitToPet(int petId, decimal percentage, int traitId);
         void DeleteGeneFromPet(int id);
         void DeleteTraitFromPet(int id);
     }
