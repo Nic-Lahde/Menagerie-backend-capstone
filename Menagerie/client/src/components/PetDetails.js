@@ -198,6 +198,16 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
         });
     };
 
+    function formatDate(inputDate) {
+        const dateObj = new Date(inputDate);
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const formattedDate = `${month}/${day}/${year}`;
+
+        return formattedDate;
+    }
+
     if (editMode) {
         return (
             <Container className="d-flex justify-content-center">
@@ -349,7 +359,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         <Button className="mb-5 ml-5 mt-5 bg-dark" onClick={() => setSelectedPet(null)} >View All</Button>
                         <Button className="mb-5 ml-5 mt-5 bg-dark" onClick={() => setEditMode(true)} >Edit</Button>
                         <Button className="mb-5 ml-5 mt-5 bg-danger" onClick={archiveToggle}>
-                            Add this pet to the archive
+                            Add to archive
                         </Button>
                         <p>{pet.speciesCommon}</p>
                         <p>{pet.speciesLatin}</p>
@@ -360,7 +370,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         {pet.feedings.length > 0 ? (
                             <div>
                                 {pet.feedings.map((feeding) => (
-                                    <p key={`feeding-${feeding.id}`}>{feeding.food} on {feeding.date} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveFeeding(feeding.id)}>Remove this feeding</Button></p>
+                                    <p key={`feeding-${feeding.id}`}>{feeding.food} on {formatDate(feeding.date)} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveFeeding(feeding.id)}>Remove</Button></p>
                                 ))}
                             </div>
                         ) : (
@@ -376,7 +386,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         {pet.genes.length > 0 ? (
                             <div>
                                 {pet.displayGenes.map((gene) => (
-                                    <p key={`gene-${gene.petGeneId}`}>{gene.name}  <Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveGene(gene.petGeneId)}>Remove this gene</Button></p>
+                                    <p key={`gene-${gene.petGeneId}`}>{gene.name}  <Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveGene(gene.petGeneId)}>Remove</Button></p>
                                 ))}
                             </div>
                         ) : (
@@ -387,7 +397,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         {pet.traits.length > 0 ? (
                             <div>
                                 {pet.traits.map((trait) => (
-                                    <p key={`trait-${trait.id}`}>{trait.name} {trait.percentage}%<Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveTrait(trait.petTraitId)}>Remove this trait</Button></p>
+                                    <p key={`trait-${trait.id}`}>{trait.name} {trait.percentage}%<Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveTrait(trait.petTraitId)}>Remove</Button></p>
                                 ))}
                             </div>
                         ) : (
