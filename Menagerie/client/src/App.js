@@ -9,7 +9,7 @@ import { Spinner } from "reactstrap";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-
+  const [selectedPet, setSelectedPet] = useState(null)
   useEffect(() => {
     onLoginStatusChange(setIsLoggedIn);
   }, []);
@@ -22,7 +22,6 @@ function App() {
     }
   }, [isLoggedIn]);
   if (isLoggedIn === null) {
-    // Until we know whether or not the user is logged in or not, just show a spinner
     return <Spinner className="app-spinner dark" />;
   }
 
@@ -30,8 +29,8 @@ function App() {
   return (
     <div className="App bg-light-subtle">
       <Router>
-        <Header isLoggedIn={isLoggedIn} userProfile={userProfile} />
-        <ApplicationViews isLoggedIn={isLoggedIn} userProfile={userProfile} />
+        <Header isLoggedIn={isLoggedIn} userProfile={userProfile} setSelectedPet={setSelectedPet} />
+        <ApplicationViews isLoggedIn={isLoggedIn} userProfile={userProfile} setSelectedPet={setSelectedPet} selectedPet={selectedPet} />
       </Router>
     </div>
   );

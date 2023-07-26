@@ -4,9 +4,9 @@ import { Pet } from "./Pet";
 import { PetDetails } from "./PetDetails"
 import { getToken } from "../modules/authManager";
 
-export const MyPets = ({ userProfile }) => {
+export const MyPets = ({ userProfile, selectedPet, setSelectedPet }) => {
     const [pets, setPets] = useState([])
-    const [selectedPet, setSelectedPet] = useState()
+
     useEffect(() => {
         if (userProfile) {
             getToken().then((token) => {

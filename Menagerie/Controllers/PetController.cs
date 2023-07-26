@@ -22,7 +22,7 @@ namespace Menagerie.Controllers
         [Authorize]
         [HttpGet("{id}")]
         public IActionResult Get(int id)
-        {
+        {  
             return Ok(_petRepository.GetAllByOwner(id));
         }
         [Authorize]
