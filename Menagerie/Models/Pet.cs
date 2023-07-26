@@ -23,6 +23,60 @@ namespace Menagerie.Models
         public List<Gene> Genes { get; set; }
         public List<Trait> Traits { get; set; }
         public List<Feeding> Feedings { get; set; }
+        public List<Gene> DisplayGenes
+        {
+            get
+            {
+                List<Gene> processedGenes = new List<Gene>();
+                var geneGroups = Genes.GroupBy(g => g.Name).ToList();
 
+                foreach (var geneGroup in geneGroups)
+                {
+                    int geneCount = geneGroup.Count();
+                    bool isCodominant = geneGroup.First().IsCoDominant;
+                    string geneName = geneGroup.First().Name;
+
+                    if (geneCount > 1 && isCodominant)
+                    {
+                        processedGenes.Add(new Gene
+                        {
+                            Id = geneGroup.First().Id,
+                            PetGeneId = geneGroup.First().PetGeneId,
+                            Name = $"{geneName} (Super)"
+                        });
+                    }
+                    else if (geneCount > 1 && !isCodominant)
+                    {
+                        processedGenes.Add(new Gene
+                        {
+                            Id = geneGroup.First().Id,
+                            PetGeneId = geneGroup.First().PetGeneId,
+                            Name = $"{geneName} (Visual)"
+                        });
+                    }
+                    else if (geneCount == 1 && !isCodominant)
+                    {
+                        processedGenes.Add(new Gene
+                        {
+                            Id = geneGroup.First().Id,
+                            PetGeneId = geneGroup.First().PetGeneId,
+                            Name = $"{geneName} (Het)"
+                        });
+                    }
+                    else if (geneCount == 1 && isCodominant)
+                    {
+                        processedGenes.Add(new Gene
+                        {
+                            Id = geneGroup.First().Id,
+                            PetGeneId = geneGroup.First().PetGeneId,
+                            Name = geneName
+                        });
+                    }
+                }
+
+                return processedGenes;
+            }
+
+        }
     }
 }

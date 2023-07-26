@@ -385,7 +385,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         <h6>Genes:</h6>
                         {pet.genes.length > 0 ? (
                             <div>
-                                {pet.genes.map((gene) => (
+                                {pet.displayGenes.map((gene) => (
                                     <p key={`gene-${gene.petGeneId}`}>{gene.name}  <Button size="sm" className="ml-2 bg-danger" onClick={() => handleRemoveGene(gene.petGeneId)}>Remove this gene</Button></p>
                                 ))}
                             </div>
