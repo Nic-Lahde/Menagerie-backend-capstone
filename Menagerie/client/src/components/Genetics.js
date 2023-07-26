@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Row, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, ModalFooter } from "reactstrap";
-
+import { Button, Row, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, ModalFooter, Col, Container, Card, CardTitle } from "reactstrap";
+import { getToken } from "../modules/authManager";
 
 export const Genetics = ({ userProfile }) => {
 
@@ -22,81 +22,127 @@ export const Genetics = ({ userProfile }) => {
     const traitToggle = () => setTraitModal(!traitModal);
     useEffect(() => {
         if (userProfile) {
-            fetch('/api/Gene/').then(res => (res.json())).then(res => setGenes(res))
+            getToken().then((token) => {
+                fetch('/api/Gene/', {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(res => setGenes(res));
+            });
         }
-    }, [userProfile])
+    }, [userProfile]);
     useEffect(() => {
         if (userProfile) {
-            fetch('/api/Trait/').then(res => (res.json())).then(res => setTraits(res))
+            getToken().then((token) => {
+                fetch('/api/Trait/', {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(res => setTraits(res));
+            });
         }
-    }, [userProfile])
+    }, [userProfile]);
     const handleGeneSubmit = (gene) => {
-        fetch("/api/gene", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(gene)
-        }).then(res => (res.json())).then(res => setGenes(res))
-        setNewGene({
-            name: "",
-            isCoDominant: false,
+        getToken().then((token) => {
+            fetch("/api/gene", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(gene)
+            })
+                .then(res => res.json())
+                .then(res => setGenes(res));
+
+            setNewGene({
+                name: "",
+                isCoDominant: false,
+            });
+            geneToggle();
         });
-        geneToggle();
-    }
+    };
     const handleTraitSubmit = (trait) => {
-        fetch("/api/Trait", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(trait)
-        }).then(res => (res.json())).then(res => setTraits(res))
-        setNewTrait({
-            name: ""
+        getToken().then((token) => {
+            fetch("/api/Trait", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(trait)
+            })
+                .then(res => res.json())
+                .then(res => setTraits(res));
+
+            setNewTrait({
+                name: ""
+            });
+            traitToggle();
         });
-        traitToggle();
-    }
+    };
     const handleGeneDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this gene?")) {
-            fetch('/api/Gene/' + id, {
-                method: "DELETE"
-            }).then(res => res.json())
-                .then(response => {
-                    setGenes(response);
+            getToken().then((token) => {
+                fetch('/api/Gene/' + id, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 })
+                    .then(res => res.json())
+                    .then(response => {
+                        setGenes(response);
+                    });
+            });
         }
-    }
+    };
     const handleTraitDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this trait?")) {
-            fetch('/api/Trait/' + id, {
-                method: "DELETE"
-            }).then(res => res.json())
-                .then(response => {
-                    setTraits(response);
+            getToken().then((token) => {
+                fetch('/api/Trait/' + id, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 })
+                    .then(res => res.json())
+                    .then(response => {
+                        setTraits(response);
+                    });
+            });
         }
-    }
+    };
     return (
-        <>
+        <Container className="d-flex justify-content-center">
             {userProfile ? (
-                <>
+                <Card fluid className="bg-success text-white mt-5 mr-5 ml-5" style={{
+                    width: '40rem'
+                }}>
 
-                    <h1>View and add genes and traits</h1>
-                    <h3>Genes</h3>
-                    <Row className="justify-content-evenly">
-                        {genes.map((gene) => (
-                            <p>{gene.name} {gene.isCoDominant ? (<p>CoDominant</p>) : (<p>Heterozygous</p>)} <Button onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>
-                        ))}
+                    <CardTitle tag="h2">View and add genes and traits</CardTitle>
+                    <Row>
+                        <Col md="6">
+                            <h3>Genes</h3>
+                            <Button className="mb-2 mt-2 bg-dark" onClick={geneToggle}>Add new gene</Button>
+                            {genes.map((gene) => (
+                                <p>{gene.name} {gene.isCoDominant ? (<p>CoDominant <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>) : (<p>Heterozygous <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>)}</p>
+                            ))}
+                        </Col>
+                        <Col md="6">
+                            <h3>Traits</h3>
+                            <p><Button className="mb-2 mt-2 bg-dark" onClick={traitToggle}>Add new trait</Button></p>
+                            {traits.map((trait) => (
+                                <><p>{trait.name} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleTraitDelete(trait.id)}>Delete</Button></p></>
+                            ))}
+                        </Col>
                     </Row>
-                    <Button onClick={geneToggle}>Add a gene</Button>
-                    <h3>Traits</h3>
-                    <Row className="justify-content-evenly">
-                        {traits.map((trait) => (
-                            <p>{trait.name}<Button onClick={() => handleTraitDelete(trait.id)}>Delete</Button></p>
-                        ))}
-                    </Row>
-                    <Button onClick={traitToggle}>Add a trait</Button>
                     <Modal
                         isOpen={geneModal}
                         toggle={geneToggle}
@@ -128,10 +174,10 @@ export const Genetics = ({ userProfile }) => {
                             </Form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onClick={() => handleGeneSubmit(newGene)}>
+                            <Button color="dark" onClick={() => handleGeneSubmit(newGene)}>
                                 Add this gene
                             </Button>{' '}
-                            <Button color="secondary" onClick={geneToggle}>
+                            <Button color="danger" onClick={geneToggle}>
                                 Cancel
                             </Button>
                         </ModalFooter>
@@ -155,18 +201,18 @@ export const Genetics = ({ userProfile }) => {
                             </Form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onClick={() => handleTraitSubmit(newTrait)}>
+                            <Button color="dark" onClick={() => handleTraitSubmit(newTrait)}>
                                 Add this trait
                             </Button>{' '}
-                            <Button color="secondary" onClick={traitToggle}>
+                            <Button color="danger" onClick={traitToggle}>
                                 Cancel
                             </Button>
                         </ModalFooter>
                     </Modal>
-                </>
+                </Card>
             ) : (
                 ""
             )}
-        </>
+        </Container>
     );
 }

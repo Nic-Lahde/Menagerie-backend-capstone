@@ -28,7 +28,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="App bg-light-subtle">
       <Router>
         <Header isLoggedIn={isLoggedIn} userProfile={userProfile} />
         <ApplicationViews isLoggedIn={isLoggedIn} userProfile={userProfile} />

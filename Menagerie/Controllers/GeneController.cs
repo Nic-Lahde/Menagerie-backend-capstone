@@ -1,5 +1,6 @@
 ﻿using Menagerie.Models;
 using Menagerie.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,20 @@ namespace Menagerie.Controllers
         {
             _geneRepository = geneRepository;
         }
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(_geneRepository.GetAll());
         }
+        [Authorize]
         [HttpPost]
         public IActionResult Create(Gene gene)
         {
             _geneRepository.Add(gene);
             return Ok(_geneRepository.GetAll());
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

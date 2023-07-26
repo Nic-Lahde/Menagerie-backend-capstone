@@ -4,28 +4,28 @@ import { logout } from "../modules/authManager";
 
 const Header = () => {
     return (
-        <nav className="navbar navbar-expand navbar-dark bg-info">
+        <nav className="navbar navbar-expand navbar-dark bg-success text-white">
             <Link to="/" className="navbar-brand">
                 Menagerie
             </Link>
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                    <Link to="/" className="nav-link">
+                    <Link to="/" className="nav-link text-white">
                         Home
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/addPet" className="nav-link">
+                    <Link to="/addPet" className="nav-link text-white">
                         Add New Pet
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/genetics" className="nav-link">
+                    <Link to="/genetics" className="nav-link text-white">
                         Genetics
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/login" className="nav-link" onClick={logout}>
+                    <Link to="/login" className="nav-link text-white" onClick={logout}>
                         LOGOUT
                     </Link>
                 </li>

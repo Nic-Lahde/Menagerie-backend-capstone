@@ -1,5 +1,6 @@
 ﻿using Menagerie.Models;
 using Menagerie.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,15 @@ namespace Menagerie.Controllers
         {
             _feedingRepository = feedingRepository;
             _petRepository = petRepository;
-        }   
+        }
+        [Authorize]
         [HttpPost("{id}")]
         public IActionResult Create(Feeding feeding, int id)
         {
             _feedingRepository.Add(feeding);
             return Ok(_petRepository.GetAllByOwner(id));
         }
+        [Authorize]
         [HttpDelete("{feedingId}/{userId}")]
         public IActionResult Delete(int feedingId, int userId)
         {

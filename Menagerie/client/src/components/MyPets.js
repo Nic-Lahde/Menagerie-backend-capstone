@@ -2,15 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
 import { Pet } from "./Pet";
 import { PetDetails } from "./PetDetails"
+import { getToken } from "../modules/authManager";
 
 export const MyPets = ({ userProfile }) => {
     const [pets, setPets] = useState([])
     const [selectedPet, setSelectedPet] = useState()
     useEffect(() => {
         if (userProfile) {
-            fetch('/api/Pet/' + userProfile.id).then(res => (res.json())).then(res => setPets(res))
+            getToken().then((token) => {
+                fetch('/api/Pet/' + userProfile.id, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(res => setPets(res));
+            });
         }
-    }, [userProfile])
+    }, [userProfile]);
 
     return (
         <>

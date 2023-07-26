@@ -14,7 +14,7 @@ const ApplicationViews = ({ isLoggedIn, userProfile }) => {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route index element={isLoggedIn ? <MyPets userProfile={userProfile} /> : <Navigate to="/login" />} />
-                <Route path="index/:id" element={isLoggedIn ? <PetDetails userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
+                {/* <Route path="index/:id" element={isLoggedIn ? <PetDetails userProfile={userProfile} /> : <Navigate to="/login" />}></Route> */}
                 <Route path="addPet" element={isLoggedIn ? <PetForm userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
                 <Route path="genetics" element={isLoggedIn ? <Genetics userProfile={userProfile} /> : <Navigate to="/login" />}></Route>
             </Route>
