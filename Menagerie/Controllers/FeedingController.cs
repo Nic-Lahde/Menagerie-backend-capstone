@@ -21,18 +21,18 @@ namespace Menagerie.Controllers
             _petRepository = petRepository;
         }
         [Authorize]
-        [HttpPost("{id}")]
-        public IActionResult Create(Feeding feeding, int id)
+        [HttpPost("{petId}")]
+        public IActionResult Create(Feeding feeding, int petId)
         {
             _feedingRepository.Add(feeding);
-            return Ok(_petRepository.GetAllByOwner(id));
+            return Ok(_petRepository.GetPetById(petId));
         }
         [Authorize]
-        [HttpDelete("{feedingId}/{userId}")]
-        public IActionResult Delete(int feedingId, int userId)
+        [HttpDelete("{feedingId}/{petId}")]
+        public IActionResult Delete(int feedingId, int petId)
         {
             _feedingRepository.Delete(feedingId);
-            return Ok(_petRepository.GetAllByOwner(userId));
+            return Ok(_petRepository.GetPetById(petId));
         }
     }
 }

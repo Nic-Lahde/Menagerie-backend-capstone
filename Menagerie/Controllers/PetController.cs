@@ -37,7 +37,7 @@ namespace Menagerie.Controllers
         public IActionResult Edit(Pet pet)
         {
             _petRepository.Update(pet);
-            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+            return Ok(_petRepository.GetPetById(pet.Id));
         }
         [Authorize]
         [HttpPut("archive")]
@@ -51,28 +51,28 @@ namespace Menagerie.Controllers
         public IActionResult AddGeneToPet(int id, Pet pet)
         {
             _petRepository.AddGeneToPet(pet.Id, id);
-           return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+           return Ok(_petRepository.GetPetById(pet.Id));
         }
         [Authorize]
         [HttpPost("AddTrait/{id}/{percentage}")]
         public IActionResult AddTraitToPet(int id, int percentage, Pet pet)
         {
             _petRepository.AddTraitToPet(pet.Id, percentage, id);
-            return Ok(_petRepository.GetAllByOwner(pet.UserProfileId));
+            return Ok(_petRepository.GetPetById(pet.Id));
         }
         [Authorize]
-        [HttpDelete("RemoveGene/{petGeneId}/{userId}")]
-        public IActionResult DeleteGeneFromPet(int petGeneId, int userId)
+        [HttpDelete("RemoveGene/{petGeneId}/{petId}")]
+        public IActionResult DeleteGeneFromPet(int petGeneId, int petId)
         {
             _petRepository.DeleteGeneFromPet(petGeneId);
-            return Ok(_petRepository.GetAllByOwner(userId));
+            return Ok(_petRepository.GetPetById(petId));
         }
         [Authorize]
-        [HttpDelete("RemoveTrait/{petTraitId}/{userId}")]
-        public IActionResult DeleteTraitFromPet(int petTraitId, int userId)
+        [HttpDelete("RemoveTrait/{petTraitId}/{petId}")]
+        public IActionResult DeleteTraitFromPet(int petTraitId, int petId)
         {
             _petRepository.DeleteTraitFromPet(petTraitId);
-            return Ok(_petRepository.GetAllByOwner(userId));
+            return Ok(_petRepository.GetPetById(petId));
         }
     }
 }

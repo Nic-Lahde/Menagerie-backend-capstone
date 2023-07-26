@@ -20,7 +20,7 @@ export const MyPets = ({ userProfile }) => {
                     .then(res => setPets(res));
             });
         }
-    }, [userProfile]);
+    }, [userProfile, selectedPet]);
 
     return (
         <>

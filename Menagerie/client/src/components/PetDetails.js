@@ -21,9 +21,8 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
+                    setEditMode(false);
                 });
         });
     };
@@ -82,16 +81,15 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
+                    geneToggle();
                 });
         });
     };
 
     const handleRemoveGene = (petGeneId) => {
         getToken().then((token) => {
-            fetch(`/api/pet/removeGene/${petGeneId}/${userProfile.id}`, {
+            fetch(`/api/pet/removeGene/${petGeneId}/${pet.id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -99,9 +97,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
                 });
         });
     };
@@ -141,15 +137,14 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
+                    traitToggle();
                 });
         });
     };
     const handleRemoveTrait = (petTraitId) => {
         getToken().then((token) => {
-            fetch(`/api/pet/removeTrait/${petTraitId}/${userProfile.id}`, {
+            fetch(`/api/pet/removeTrait/${petTraitId}/${pet.id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -157,9 +152,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
                 });
         });
     };
@@ -174,7 +167,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
     });
     const handleFeedingSubmit = () => {
         getToken().then((token) => {
-            fetch(`/api/feeding/${userProfile.id}`, {
+            fetch(`/api/feeding/${pet.id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -184,16 +177,15 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
+                    feedingToggle();
                 });
         });
     };
 
     const handleRemoveFeeding = (feedingId) => {
         getToken().then((token) => {
-            fetch(`/api/feeding/${feedingId}/${userProfile.id}`, {
+            fetch(`/api/feeding/${feedingId}/${pet.id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -201,9 +193,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
             })
                 .then(res => res.json())
                 .then((response) => {
-                    setPets(response);
-                    setSelectedPet(null);
-                    navigate("/");
+                    setSelectedPet(response);
                 });
         });
     };
