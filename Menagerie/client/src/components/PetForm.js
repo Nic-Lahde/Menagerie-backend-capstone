@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button, Form, FormGroup, Label, Input, Col, Card, Container } from "reactstrap";
 import { useNavigate } from "react-router-dom"
 import { getToken } from "../modules/authManager";
+import { UploadWidget } from "./UploadWidget";
 
 export const PetForm = ({ userProfile }) => {
     const [newPet, setNewPet] = useState({
@@ -36,7 +37,7 @@ export const PetForm = ({ userProfile }) => {
 
     return (
         <Container className="d-flex justify-content-center">
-            <Card fluid className="bg-success text-white mt-5 mr-5 ml-5" style={{
+            <Card fluid='true' className="bg-success text-white mt-5 mr-5 ml-5" style={{
                 width: '60rem'
             }}>
                 <Form onSubmit={handleSubmit}>
@@ -139,19 +140,7 @@ export const PetForm = ({ userProfile }) => {
                                 </FormGroup>
                             </Col>
                         </FormGroup>
-                        <FormGroup row>
-                            <Label for="imageUrl" sm={{ size: 2, offset: 1 }}>ImageUrl</Label>
-                            <Col sm={6}>
-                                <Input
-                                    id="imageUrl"
-                                    type="text"
-                                    value={newPet.imageUrl}
-                                    onChange={(e) => setNewPet({ ...newPet, imageUrl: e.target.value })}
-                                    bsSize="sm"
-                                />
-                            </Col>
-                        </FormGroup>
-
+                        <UploadWidget newPet={newPet} setNewPet={setNewPet} />
                         <FormGroup row>
                             <Label for="foodInterval" sm={{ size: 2, offset: 1 }}>How many days between feedings?</Label>
                             <Col sm={2}>
