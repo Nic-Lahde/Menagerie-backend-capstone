@@ -14,7 +14,6 @@ namespace Menagerie.Controllers
     public class PetController : ControllerBase
     {
         private readonly IPetRepository _petRepository;
-        // GET: api/<ValuesController>
         public PetController(IPetRepository petRepository)
         {
             _petRepository = petRepository;

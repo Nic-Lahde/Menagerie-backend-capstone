@@ -2,6 +2,7 @@ import { Card, CardBody, CardTitle, Col, Button, Form, FormGroup, Label, Input, 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 import { getToken } from "../modules/authManager";
+import { UploadWidget } from "./UploadWidget";
 
 export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
 
@@ -301,17 +302,7 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                                     </FormGroup>
                                 </Col>
                             </FormGroup>
-                            <FormGroup row>
-                                <Label sm={{ size: 2, offset: 1 }} for="imageUrl">ImageUrl</Label>
-                                <Col sm={6}>
-                                    <Input
-                                        id="imageUrl"
-                                        type="text"
-                                        value={petToEdit.imageUrl}
-                                        onChange={(e) => setPetToEdit({ ...petToEdit, imageUrl: e.target.value })}
-                                    />
-                                </Col>
-                            </FormGroup>
+                            <UploadWidget newPet={petToEdit} setNewPet={setPetToEdit} />
                             <FormGroup row>
                                 <Label sm={{ size: 2, offset: 1 }} for="foodInterval">How many days between feedings?</Label>
                                 <Col sm={2}>
