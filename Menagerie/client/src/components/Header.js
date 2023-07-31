@@ -25,6 +25,11 @@ const Header = ({ setSelectedPet }) => {
                     </Link>
                 </li>
                 <li className="nav-item">
+                    <Link to="/clutchCalculator" className="nav-link text-white">
+                        Clutch Calculator
+                    </Link>
+                </li>
+                <li className="nav-item">
                     <Link to="/login" className="nav-link text-white" onClick={logout}>
                         LOGOUT
                     </Link>

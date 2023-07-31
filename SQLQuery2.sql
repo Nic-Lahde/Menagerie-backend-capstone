@@ -13,3 +13,8 @@ VALUES (1, 'Aloysius', 'Northern Blue-Tongued Skink', 'Tiliqua Scincoides Interm
                  WHERE p.UserProfileId = 1 AND p.Archive = 0
 
                  SELECT * FROM Pet
+ALTER TABLE [PetGene] ADD FOREIGN KEY ([GeneId]) REFERENCES [Gene] ([Id]) ON DELETE CASCADE
+GO
+
+ALTER TABLE [PetTrait] ADD FOREIGN KEY ([TraitId]) REFERENCES [Trait] ([Id]) ON DELETE CASCADE
+GO

@@ -122,7 +122,7 @@ export const Genetics = ({ userProfile }) => {
     return (
         <Container className="d-flex justify-content-center">
             {userProfile ? (
-                <Card fluid className="bg-success text-white mt-5 mr-5 ml-5" style={{
+                <Card className="bg-success text-white mt-5 mr-5 ml-5" style={{
                     width: '40rem'
                 }}>
 
@@ -132,14 +132,14 @@ export const Genetics = ({ userProfile }) => {
                             <h3>Genes</h3>
                             <Button className="mb-2 mt-2 bg-dark" onClick={geneToggle}>Add new gene</Button>
                             {genes.map((gene) => (
-                                <p>{gene.name} {gene.isCoDominant ? (<p>CoDominant <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>) : (<p>Heterozygous <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>)}</p>
+                                <div key={gene.id}>{gene.name} {gene.isCoDominant ? (<p>CoDominant <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>) : (<p>Heterozygous <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>)}</div>
                             ))}
                         </Col>
                         <Col md="6">
                             <h3>Traits</h3>
                             <p><Button className="mb-2 mt-2 bg-dark" onClick={traitToggle}>Add new trait</Button></p>
                             {traits.map((trait) => (
-                                <><p>{trait.name} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleTraitDelete(trait.id)}>Delete</Button></p></>
+                                <div key={trait.id}><p>{trait.name} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleTraitDelete(trait.id)}>Delete</Button></p></div>
                             ))}
                         </Col>
                     </Row>
