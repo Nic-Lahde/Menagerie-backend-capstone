@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, CardBody, CardTitle, Input, Label, Row, Button } from "reactstrap";
+import { Card, CardBody, CardTitle, Input, Label, Row, Button, Col } from "reactstrap";
 import { getToken } from "../modules/authManager";
 
 export const ClutchCalculator = ({ userProfile }) => {
@@ -21,8 +21,9 @@ export const ClutchCalculator = ({ userProfile }) => {
     const [selectedDamPercentage, setSelectedDamPercentage] = useState(100);
     const [selectedDamTrait, setSelectedDamTrait] = useState()
 
-    const [offspringGenes, setOffspringGenes] = useState([]);
-    const [offspringTraits, setOffspringTraits] = useState([])
+    const [numberOfOffspring, setNumberOfOffspring] = useState(1);
+    const [offspringList, setOffspringList] = useState([]);
+
 
 
     useEffect(() => {
@@ -140,26 +141,24 @@ export const ClutchCalculator = ({ userProfile }) => {
         const getOffspringGeneCount = (geneName) => {
             const sireCount = sireGeneMap.has(geneName) ? sireGeneMap.get(geneName).count : 0;
             const damCount = damGeneMap.has(geneName) ? damGeneMap.get(geneName).count : 0;
-
+            const totalGeneCount = sireCount + damCount;
+            let randomValue = Math.random();
             if (sireCount === 0 && damCount === 0) return 0;
             if (sireCount === 2 && damCount === 2) return 2;
             if (sireCount === 2 && damCount === 0) return 1;
             if (sireCount === 0 && damCount === 2) return 1;
 
-            const totalGeneCount = sireCount + damCount;
-
             if (totalGeneCount === 3) {
-                return Math.random() < 0.5 ? 1 : 2;
+                return randomValue < 0.5 ? 1 : 2;
             }
 
             if (totalGeneCount === 2) {
-                const randomValue = Math.random();
                 if (randomValue < 0.25) return 0;
                 if (randomValue < 0.75) return 1;
                 return 2;
             }
 
-            return Math.random() < 0.5 ? 0 : 1;
+            return randomValue < 0.5 ? 0 : 1;
         };
 
         genes.forEach((gene) => {
@@ -174,7 +173,8 @@ export const ClutchCalculator = ({ userProfile }) => {
 
         const displayOffspringGenes = prepareGenesForDisplay(offspringGenes)
 
-        setOffspringGenes(displayOffspringGenes);
+        return displayOffspringGenes;
+
     };
     const calculateOffspringTraits = () => {
         const offspringTraitMap = new Map();
@@ -214,15 +214,22 @@ export const ClutchCalculator = ({ userProfile }) => {
             percentage,
         }));
 
-        setOffspringTraits(offspringTraits);
+
+        return offspringTraits;
     };
     const calculateOffspring = () => {
-        calculateOffspringGenes();
-        calculateOffspringTraits();
-    }
+        const offspringList = [];
+        for (let i = 0; i < numberOfOffspring; i++) {
+            const offspringGenes = calculateOffspringGenes();
+            const offspringTraits = calculateOffspringTraits();
+            offspringList.push({ genes: offspringGenes, traits: offspringTraits });
+        }
+        setOffspringList(offspringList);
+    };
+
     if (userProfile) {
         return (
-            <>
+            <div className="justify-content-evenly">
                 <Row className="justify-content-evenly">
                     <Card style={{ width: '40rem' }} className="mb-5 ml-5 mt-5 mt-5 bg-success text-white">
                         <CardBody>
@@ -236,7 +243,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                             >
                                 <option value="">Select a gene</option>
                                 {genes.map((gene) => (
-                                    <option key={gene.id} value={gene.id}>
+                                    <option key={`sire-gene-option-${gene.id}`} value={gene.id}>
                                         {gene.name}
                                     </option>
                                 ))}
@@ -247,7 +254,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                                 </Button>) : ("")}
 
                             <div className="mb-5">Selected Genes: {displaySireGenes.map((gene) => (
-                                <div key={gene?.id}>{gene?.name}</div>
+                                <div key={`sire-gene-${gene.id}`} >{gene?.name}</div>
                             ))}</div>
                             <Label for="sireTraitSelect">Select Trait:</Label>
                             <Input
@@ -258,7 +265,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                             >
                                 <option value="">Select a trait</option>
                                 {traits.map((trait) => (
-                                    <option key={trait.id} value={trait.id}>
+                                    <option key={`sire-trait-option-${trait.id}`} value={trait.id}>
                                         {trait.name}
                                     </option>
                                 ))}
@@ -279,7 +286,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                                 </Button>) : ("")}
 
                             <div className="mb-5">Selected Traits: {sireTraits.map((trait) => (
-                                <div key={trait?.id}>{trait?.name} {trait?.percentage}%</div>
+                                <div key={`sire-trait-${trait.id}`} >{trait?.name} {trait?.percentage}%</div>
                             ))}</div>
                         </CardBody>
                     </Card>
@@ -296,7 +303,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                             >
                                 <option value="">Select a gene</option>
                                 {genes.map((gene) => (
-                                    <option key={gene.id} value={gene.id}>
+                                    <option key={`dam-gene-option-${gene.id}`} value={gene.id}>
                                         {gene.name}
                                     </option>
                                 ))}
@@ -306,7 +313,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                                     onClick={() => setDamGenes((prevDamGenes) => [...prevDamGenes, selectedDamGene])}>Add Gene
                                 </Button>) : ("")}
                             <div className="mb-5" >Selected Genes: {displayDamGenes.map((gene) => (
-                                <div key={gene?.id}>{gene?.name}</div>
+                                <div key={`dam-gene-${gene.id}`} >{gene?.name}</div>
                             ))}</div>
                             <Label for="damTraitSelect">Select Trait:</Label>
                             <Input
@@ -317,7 +324,7 @@ export const ClutchCalculator = ({ userProfile }) => {
                             >
                                 <option value="">Select a trait</option>
                                 {traits.map((trait) => (
-                                    <option key={trait.id} value={trait.id}>
+                                    <option key={`dam-trait-option-${trait.id}`} value={trait.id}>
                                         {trait.name}
                                     </option>
                                 ))}
@@ -338,40 +345,64 @@ export const ClutchCalculator = ({ userProfile }) => {
                                 </Button>) : ("")}
 
                             <div className="mb-5">Selected Traits: {damTraits.map((trait) => (
-                                <div key={trait?.id}>{trait?.name} {trait?.percentage}%</div>
+                                <div key={`dam-trait-${trait?.id}`}>{trait?.name} {trait?.percentage}%</div>
                             ))}</div>
                         </CardBody>
                     </Card>
                 </Row>
-                <Row className="justify-content-evenly">
-                    <Card style={{ width: '40rem' }} className="mb-5 ml-5 bg-success text-white">
-                        <CardBody>
-                            <CardTitle>Offspring</CardTitle>
-                            <h6>Genes:</h6>
-                            {offspringGenes.length > 0 ? (
-                                <div>
-                                    {offspringGenes.map((gene) => (
-                                        <p key={`gene-${gene.name}`}>{gene.name}</p>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p>None</p>
-                            )}
-                            <h6>Traits:</h6>
-                            {offspringTraits.length > 0 ? (
-                                <div>
-                                    {offspringTraits.map((trait) => (
-                                        <p key={`trait-${trait.name}`}>{trait.name} {trait.percentage}%</p>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p>None</p>
-                            )}
-                            <Button className="mb-2 mt-2 bg-dark text-white" onClick={calculateOffspring}>Simulate offspring</Button>
-                        </CardBody>
-                    </Card>
+                <Row >
+                    <Label for="numberOfOffspring" sm={{ size: 2, offset: 4 }}>Number of Offspring:</Label>
+                    <Input
+                        type="number"
+                        name="numberOfOffspring"
+                        id="numberOfOffspring"
+                        value={numberOfOffspring}
+                        min="1"
+                        style={{ width: '4rem' }}
+                        onChange={(e) => setNumberOfOffspring(parseInt(e.target.value))}
+                    />
+                    <Button className="mb-2 mt-2 ml-5 bg-dark text-white" style={{ width: '10rem' }} onClick={() => { calculateOffspring() }}>Simulate clutch</Button>
                 </Row>
-            </>
+
+                <h3>Offspring</h3>
+                {offspringList.length > 0 ? (
+                    <Row className="justify-content-evenly">
+                        {offspringList.map((offspring, index) => (
+                            <Card key={`offspring-car-${index}`} style={{ width: '40rem' }} className="mb-5 ml-5 mt-5 mt-5 bg-success text-white">
+                                <CardBody>
+                                    <div key={`offspring-${index}`}>
+                                        <h6>Offspring {index + 1}</h6>
+                                        <h6>Genes:</h6>
+                                        {offspring.genes.length > 0 ? (
+                                            <div>
+                                                {offspring.genes.map((gene) => (
+                                                    <p key={`offspring${index}-gene-${gene.name}`}>{gene.name}</p>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p>None</p>
+                                        )}
+                                        <h6>Traits:</h6>
+                                        {offspring.traits.length > 0 ? (
+                                            <div>
+                                                {offspring.traits.map((trait) => (
+                                                    <p key={`offspring${index}-trait-${trait.name}`}>{trait.name} {trait.percentage}%</p>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p>None</p>
+                                        )}
+                                        <hr />
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        ))}
+                    </Row>
+                ) : (
+                    <p>Simulate offspring to see results</p>
+                )}
+
+            </div>
         );
     };
 }
