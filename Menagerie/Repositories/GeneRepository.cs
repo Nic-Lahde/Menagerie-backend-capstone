@@ -17,7 +17,7 @@ namespace Menagerie.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, [Name], IsCoDominant FROM Gene";
+                    cmd.CommandText = "SELECT Id, [Name], IsCoDominant FROM Gene ORDER BY [Name]";
                     var reader = cmd.ExecuteReader();
 
                     var genes = new List<Gene>();

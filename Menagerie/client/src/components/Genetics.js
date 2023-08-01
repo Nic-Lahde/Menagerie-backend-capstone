@@ -8,6 +8,8 @@ export const Genetics = ({ userProfile }) => {
 
     const [traits, setTraits] = useState([])
 
+    const [deleteId, setDeleteId] = useState()
+
     const [newGene, setNewGene] = useState({
         name: "",
         isCoDominant: false
@@ -20,6 +22,10 @@ export const Genetics = ({ userProfile }) => {
     const [traitModal, setTraitModal] = useState(false);
     const geneToggle = () => setGeneModal(!geneModal);
     const traitToggle = () => setTraitModal(!traitModal);
+    const [geneDeleteModal, setGeneDeleteModal] = useState(false);
+    const [traitDeleteModal, setTraitDeleteModal] = useState(false);
+    const geneDeleteToggle = () => setGeneDeleteModal(!geneDeleteModal);
+    const traitDeleteToggle = () => setTraitDeleteModal(!traitDeleteModal);
     useEffect(() => {
         if (userProfile) {
             getToken().then((token) => {
@@ -87,37 +93,43 @@ export const Genetics = ({ userProfile }) => {
             traitToggle();
         });
     };
-    const handleGeneDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this gene?")) {
-            getToken().then((token) => {
-                fetch('/api/Gene/' + id, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                    .then(res => res.json())
-                    .then(response => {
-                        setGenes(response);
-                    });
-            });
-        }
+    const handleGeneDeleteModal = (id) => {
+        setDeleteId(id);
+        geneDeleteToggle();
+    }
+    const handleGeneDelete = () => {
+        getToken().then((token) => {
+            fetch('/api/Gene/' + deleteId, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(res => res.json())
+                .then(response => {
+                    setGenes(response);
+                });
+        });
+        geneDeleteToggle();
     };
-    const handleTraitDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this trait?")) {
-            getToken().then((token) => {
-                fetch('/api/Trait/' + id, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                    .then(res => res.json())
-                    .then(response => {
-                        setTraits(response);
-                    });
-            });
-        }
+    const handleTraitDeleteModal = (id) => {
+        setDeleteId(id);
+        traitDeleteToggle();
+    }
+    const handleTraitDelete = () => {
+        getToken().then((token) => {
+            fetch('/api/Trait/' + deleteId, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(res => res.json())
+                .then(response => {
+                    setTraits(response);
+                });
+        });
+        traitDeleteToggle();
     };
     return (
         <Container className="d-flex justify-content-center">
@@ -132,14 +144,14 @@ export const Genetics = ({ userProfile }) => {
                             <h3>Genes</h3>
                             <Button className="mb-2 mt-2 bg-dark" onClick={geneToggle}>Add new gene</Button>
                             {genes.map((gene) => (
-                                <div key={gene.id}>{gene.name} {gene.isCoDominant ? (<p>CoDominant <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>) : (<p>Heterozygous <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDelete(gene.id)}>Delete</Button></p>)}</div>
+                                <div key={gene.id}>{gene.name} {gene.isCoDominant ? (<p>CoDominant <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDeleteModal(gene.id)}>Delete</Button></p>) : (<p>Recessive <Button size="sm" className="ml-2 bg-danger" onClick={() => handleGeneDeleteModal(gene.id)}>Delete</Button></p>)}</div>
                             ))}
                         </Col>
                         <Col md="6">
                             <h3>Traits</h3>
                             <p><Button className="mb-2 mt-2 bg-dark" onClick={traitToggle}>Add new trait</Button></p>
                             {traits.map((trait) => (
-                                <div key={trait.id}><p>{trait.name} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleTraitDelete(trait.id)}>Delete</Button></p></div>
+                                <div key={trait.id}><p>{trait.name} <Button size="sm" className="ml-2 bg-danger" onClick={() => handleTraitDeleteModal(trait.id)}>Delete</Button></p></div>
                             ))}
                         </Col>
                     </Row>
@@ -164,11 +176,11 @@ export const Genetics = ({ userProfile }) => {
                                     <Input
                                         type="select"
                                         name="geneType"
-                                        value={newGene.isCoDominant ? "CoDominant" : "Heterozygous"}
+                                        value={newGene.isCoDominant ? "CoDominant" : "Recessive"}
                                         onChange={(e) => setNewGene({ ...newGene, isCoDominant: e.target.value === "CoDominant" })}
                                     >
                                         <option value="CoDominant">CoDominant</option>
-                                        <option value="Heterozygous">Heterozygous</option>
+                                        <option value="Recessive">Recessive</option>
                                     </Input>
                                 </FormGroup>
                             </Form>
@@ -205,6 +217,34 @@ export const Genetics = ({ userProfile }) => {
                                 Add this trait
                             </Button>{' '}
                             <Button color="danger" onClick={traitToggle}>
+                                Cancel
+                            </Button>
+                        </ModalFooter>
+                    </Modal>
+                    <Modal
+                        isOpen={geneDeleteModal}
+                        toggle={geneDeleteToggle}
+                    >
+                        <ModalHeader toggle={geneDeleteToggle}>Delete this gene?</ModalHeader>
+                        <ModalFooter>
+                            <Button color="danger" onClick={() => handleGeneDelete()}>
+                                Delete
+                            </Button>{' '}
+                            <Button color="dark" onClick={geneDeleteToggle}>
+                                Cancel
+                            </Button>
+                        </ModalFooter>
+                    </Modal>
+                    <Modal
+                        isOpen={traitDeleteModal}
+                        toggle={traitDeleteToggle}
+                    >
+                        <ModalHeader toggle={traitDeleteToggle}>Delete this trait?</ModalHeader>
+                        <ModalFooter>
+                            <Button color="danger" onClick={() => handleTraitDelete()}>
+                                Delete
+                            </Button>{' '}
+                            <Button color="dark" onClick={traitDeleteToggle}>
                                 Cancel
                             </Button>
                         </ModalFooter>

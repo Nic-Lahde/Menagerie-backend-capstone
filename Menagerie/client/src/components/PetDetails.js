@@ -406,10 +406,10 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         Your pet will be marked as inactive and no longer appear alongside your other pets. This action is irreversible.
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={handleArchiveSubmit}>
+                        <Button color="danger" onClick={handleArchiveSubmit}>
                             Send to the archive
                         </Button>{' '}
-                        <Button color="secondary" onClick={archiveToggle}>
+                        <Button color="dark" onClick={archiveToggle}>
                             Cancel
                         </Button>
                     </ModalFooter>
@@ -441,10 +441,10 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => handleGeneSubmit(selectedGeneId)}>
+                        <Button color="dark" onClick={() => handleGeneSubmit(selectedGeneId)}>
                             Add this gene
                         </Button>{' '}
-                        <Button color="secondary" onClick={geneToggle}>
+                        <Button color="dark" onClick={geneToggle}>
                             Cancel
                         </Button>
                     </ModalFooter>
@@ -496,10 +496,10 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => handleTraitSubmit()}>
+                        <Button color="dark" onClick={() => handleTraitSubmit()}>
                             Add this trait
                         </Button>{' '}
-                        <Button color="secondary" onClick={traitToggle}>
+                        <Button color="dark" onClick={traitToggle}>
                             Cancel
                         </Button>
                     </ModalFooter>
@@ -533,10 +533,10 @@ export const PetDetails = ({ pet, setSelectedPet, setPets, userProfile }) => {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => handleFeedingSubmit()}>
+                        <Button color="dark" onClick={() => handleFeedingSubmit()}>
                             Save Feeding
                         </Button>{" "}
-                        <Button color="secondary" onClick={feedingToggle}>
+                        <Button color="dark" onClick={feedingToggle}>
                             Cancel
                         </Button>
                     </ModalFooter>
