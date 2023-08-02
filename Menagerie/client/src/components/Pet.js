@@ -16,7 +16,7 @@ export const Pet = ({ pet, setSelectedPet }) => {
             const timeSinceLastFeeding = currentTime.getTime() - mostRecentFeedingDate.getTime();
             const daysSinceLastFeeding = timeSinceLastFeeding / (1000 * 3600 * 24);
             const daysRemaining = pet.foodInterval - daysSinceLastFeeding;
-            return Math.floor(Math.max(0, daysRemaining));
+            return Math.floor(Math.max(0, daysRemaining)) + 1;
         }
         return 0;
     };

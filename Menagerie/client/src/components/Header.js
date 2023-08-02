@@ -5,27 +5,28 @@ import { logout } from "../modules/authManager";
 const Header = ({ setSelectedPet }) => {
     return (
         <nav className="navbar navbar-expand navbar-dark bg-success text-white">
-            <Link to="/" className="navbar-brand" onClick={() => setSelectedPet(null)}>
+            <img style={{ width: '4rem' }} className="ml-3 mr-3" alt="menagerie-logo" src="../images/TRRbrand.png" />
+            <Link to="/" className="navbar-brand mr-5" onClick={() => setSelectedPet(null)}>
                 Menagerie
             </Link>
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                    <Link to="/" className="nav-link text-white" onClick={() => setSelectedPet(null)}>
+                    <Link to="/" className="nav-link text-white mr-5" onClick={() => setSelectedPet(null)}>
                         Home
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/addPet" className="nav-link text-white">
+                    <Link to="/addPet" className="nav-link text-white mr-5">
                         Add New Pet
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/genetics" className="nav-link text-white">
+                    <Link to="/genetics" className="nav-link text-white mr-5">
                         Genetics
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link to="/clutchCalculator" className="nav-link text-white">
+                    <Link to="/clutchCalculator" className="nav-link text-white mr-5">
                         Clutch Calculator
                     </Link>
                 </li>

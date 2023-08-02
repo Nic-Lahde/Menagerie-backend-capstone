@@ -42,6 +42,7 @@ export const PetForm = ({ userProfile }) => {
             }}>
                 <Form onSubmit={handleSubmit}>
                     <fieldset className="mt-3 ml-5">
+                        <UploadWidget newPet={newPet} setNewPet={setNewPet} />
                         <FormGroup row>
                             <Label for="name" sm={{ size: 2, offset: 1 }}>Name</Label>
                             <Col sm={4}>
@@ -140,7 +141,7 @@ export const PetForm = ({ userProfile }) => {
                                 </FormGroup>
                             </Col>
                         </FormGroup>
-                        <UploadWidget newPet={newPet} setNewPet={setNewPet} />
+
                         <FormGroup row>
                             <Label for="foodInterval" sm={{ size: 2, offset: 1 }}>How many days between feedings?</Label>
                             <Col sm={2}>
