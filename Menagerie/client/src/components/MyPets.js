@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Row } from "reactstrap";
+import { Button, Row } from "reactstrap";
 import { Pet } from "./Pet";
 import { PetDetails } from "./PetDetails"
 import { getToken } from "../modules/authManager";
 
 export const MyPets = ({ userProfile, selectedPet, setSelectedPet }) => {
     const [pets, setPets] = useState([])
-
-    useEffect(() => {
+    const getAllUserPets = () => {
         if (userProfile) {
             getToken().then((token) => {
                 fetch('/api/Pet/' + userProfile.id, {
@@ -27,7 +26,25 @@ export const MyPets = ({ userProfile, selectedPet, setSelectedPet }) => {
                     });
             });
         }
+    }
+    useEffect(() => {
+        getAllUserPets()
     }, [userProfile, selectedPet]);
+
+    const handleArchiveView = () => {
+        getToken().then((token) => {
+            fetch('/api/Pet/archived/' + userProfile.id, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(res => res.json())
+                .then(archivedPets => {
+                    setPets(archivedPets);
+                });
+        });
+    }
 
     const daysUntilNextFeeding = (pet) => {
         if (pet.feedings && pet.feedings.length > 0) {
@@ -62,6 +79,8 @@ export const MyPets = ({ userProfile, selectedPet, setSelectedPet }) => {
                                     <Pet pet={pet} key={pet.id} setSelectedPet={setSelectedPet} daysUntilNextFeeding={daysUntilNextFeeding} />
                                 ))}
                             </Row>
+                            <Button className="mb-5 ml-5 mt-5 bg-dark" onClick={() => handleArchiveView()} >View Archived</Button>
+                            <Button className="mb-5 ml-5 mt-5 bg-dark" onClick={() => getAllUserPets()} >View Active</Button>
                         </>
                     )}
                 </>

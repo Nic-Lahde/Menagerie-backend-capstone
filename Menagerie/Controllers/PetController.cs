@@ -25,6 +25,12 @@ namespace Menagerie.Controllers
             return Ok(_petRepository.GetAllByOwner(id));
         }
         [Authorize]
+        [HttpGet("archived/{id}")]
+        public IActionResult GetArchived(int id)
+        {
+            return Ok(_petRepository.GetAllArchivedByOwner(id));
+        }
+        [Authorize]
         [HttpPost]
         public IActionResult Create(Pet pet)
         {
