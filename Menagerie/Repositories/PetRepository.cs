@@ -56,6 +56,7 @@ namespace Menagerie.Repositories
                                     SexId = DbUtils.GetInt(reader, "SexId"),
                                     Sex = DbUtils.GetString(reader, "Sex"),
                                     Notes = DbUtils.GetString(reader, "Notes"),
+                                    Archive = false,
                                     Feedings = new List<Feeding>(),
                                     Traits = new List<Trait>(),
                                     Genes = new List<Gene>()
@@ -152,6 +153,7 @@ namespace Menagerie.Repositories
                                     SexId = DbUtils.GetInt(reader, "SexId"),
                                     Sex = DbUtils.GetString(reader, "Sex"),
                                     Notes = DbUtils.GetString(reader, "Notes"),
+                                    Archive = true,
                                     Feedings = new List<Feeding>(),
                                     Traits = new List<Trait>(),
                                     Genes = new List<Gene>()
