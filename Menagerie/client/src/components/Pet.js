@@ -37,11 +37,13 @@ export const Pet = ({ pet, setSelectedPet }) => {
                         <img src={pet.imageUrl} alt="image of pet" className="img-thumbnail" style={{ width: "400px", height: "300px" }} />
                         <p>{pet.speciesCommon}</p>
                         <p>{pet.speciesLatin}</p>
-                        {isTimeForFeeding() ? (
-                            <h2>It's time for another feeding!</h2>
-                        ) : (
-                            <p>Next feeding in {daysUntilNextFeeding()} days</p>
-                        )}
+                        {!pet.archive ? (
+                            isTimeForFeeding() ? (
+                                <h2>It's time for another feeding!</h2>
+                            ) : (
+                                <p>Next feeding in {daysUntilNextFeeding()} days</p>
+                            )
+                        ) : ""}
                     </CardBody>
                 </Card>
             </div>
